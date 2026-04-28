@@ -42,7 +42,7 @@ function JavaEditor() {
        headers: {
          'Content-Type': 'application/json'
        },
-       body: JSON.stringify({ code })
+       body: JSON.stringify({ code, enablePreview })
      });
 
      if (!response.ok) {
@@ -58,7 +58,10 @@ function JavaEditor() {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ code: currentCode })
+      body: JSON.stringify({
+              code: currentCode
+              enablePreview: enablePreview
+      })
     });
 
     if (!response.ok) throw new Error(response.statusText);
