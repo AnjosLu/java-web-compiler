@@ -39,7 +39,6 @@ public class CompilerTest {
       }
     }
     """;
-
     var loader = new MemoryClassLoader();
     var withoutPreview = Compiler.compileInMemory("Main", code, loader, false);
     var withPreview = Compiler.compileInMemory("Main", code, loader, true);
