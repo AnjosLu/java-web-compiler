@@ -10,6 +10,23 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CompilerTest {
 
   @Test
+  public void previewFeatureWithoutFlagShouldFail() {
+    var code = """
+    public class Main {
+      public static void main(String[] args) {
+        Object o = 42;
+        switch (o) {
+          case Integer i -> System.out.println(i);
+          default -> {}
+        }
+      }
+    }
+    """;
+    var diagnostics = Compiler.compileInMemory("Main", code, new MemoryClassLoader(), false);
+    assertFalse(diagnostics.isEmpty());
+  }
+
+  @Test
   public void previewFeatureWithFlagShouldSucceed() {
     var code = """
     public class Main {
