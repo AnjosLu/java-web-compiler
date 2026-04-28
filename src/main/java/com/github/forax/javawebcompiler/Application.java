@@ -5,7 +5,7 @@ import module java.compiler;
 
 import tools.jackson.databind.ObjectMapper;
 
-public class Application {
+public final class Application {
 
   private static final Pattern CLASSNAME_PATTERN = Pattern.compile("class\\s+(\\w+)");
 
