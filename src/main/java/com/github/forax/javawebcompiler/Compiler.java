@@ -54,7 +54,7 @@ public class Compiler {
 
   private static List<Diagnostic> compilationResultHandler(CompilerResult compilerResult){
     var result = new ArrayList<Diagnostic>();
-    if(! compilerResult.success){
+    if (!compilerResult.success) {
       for (var diagnostic : compilerResult.diagnostics.getDiagnostics()) {
         result.add(new Diagnostic(
                 diagnostic.getLineNumber(),
