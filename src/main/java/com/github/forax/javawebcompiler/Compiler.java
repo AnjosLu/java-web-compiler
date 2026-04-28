@@ -14,8 +14,8 @@ public class Compiler {
     private record CompilerResult(boolean success, DiagnosticCollector<Object> diagnostics) {}
 
     // Package private for testing
-    static List<Diagnostic> compileInMemory(String className, String sourceCode) {
-        var compileResult = compileTask(className, sourceCode);
+    static List<Diagnostic> compileInMemory(String className, String sourceCode, MemoryClassLoader loader) {
+        var compileResult = compileTask(className, sourceCode, loader);
         return compilationResultHandler(compileResult);
     }
 
