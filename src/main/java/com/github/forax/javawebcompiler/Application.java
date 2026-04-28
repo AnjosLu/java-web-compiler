@@ -6,8 +6,10 @@ import module java.compiler;
 import tools.jackson.databind.ObjectMapper;
 
 import javax.tools.ToolProvider;
+import java.util.logging.Logger;
 
 public class Application {
+    private static final Logger LOGGER = Logger.getLogger(Application.class.getName());
 
   private record Diagnostic(long line, long column, String message) {} 
 
@@ -22,7 +24,23 @@ public class Application {
     app.post("/compile", (req, res) -> {
       try {
         var body = req.bodyText();
+        /*
+        Request validation???
+        */
+          if (body == null || body.isBlank()) {
+              res.status(400).json("error");
+              return;
+          }
+
         var tree = objectMapper.readTree(body);
+          /*
+            Request validation???
+            */
+          if (tree.get("code") == null) {
+              res.status(400).json("error");
+              return;
+          }
+
         var sourceCode = tree.get("code").asString();
 
         var diagnostics = compileInMemory("Main", sourceCode);
@@ -36,10 +54,26 @@ public class Application {
 
     app.listen(8080);
     System.out.println("Web site on http://localhost:8080/index.html");
+    /*
+    Add a logger
+     */
+      LOGGER.info("Web site on http://localhost:8080/index.html");
+
   }
 
+<<<<<<< Updated upstream
   private static List<Diagnostic> compileInMemory(String className, String sourceCode) {
     var compiler = ToolProvider.getSystemJavaCompiler();
+=======
+  private static List<Map<String, Object>> compileInMemory(String className, String sourceCode) {
+    /*
+      Verification here
+       */
+      Objects.requireNonNull(className);
+      Objects.requireNonNull(sourceCode);
+
+      var compiler = ToolProvider.getSystemJavaCompiler();
+>>>>>>> Stashed changes
     var diagnostics = new DiagnosticCollector<>();
 
     var file = new SimpleJavaFileObject(
