@@ -99,4 +99,45 @@ public final class ApplicationTest {
     var className = Application.classNameExtractor(code);
     assertEquals("ExamplesClass", className);
   }
+  public void compileWithDifferentClassName() {
+    var code = """
+      public class Test {
+        public static void main(String[] args) {
+        }
+      }
+      """;
+    var loader = new MemoryClassLoader();
+    var diagnostics = Compiler.compileInMemory("Test", code,loader);
+
+    assertTrue(diagnostics.isEmpty());
+  }
+
+  @Test
+  public void compileWithWrongClassNameShouldFail() {
+    var code = """
+      public class Test {
+      }
+      """;
+
+    var loader = new MemoryClassLoader();
+    var diagnostics = Compiler.compileInMemory("Main", code,loader);
+
+    assertFalse(diagnostics.isEmpty());
+  }
+
+  @Test
+  public void compileClassWithoutMainShouldStillCompile() {
+    var code = """
+        public class Test {
+            int x = 10;
+        }
+        """;
+
+    var loader = new MemoryClassLoader();
+    var diagnostics = Compiler.compileInMemory("Test", code,loader);
+
+    assertTrue(diagnostics.isEmpty());
+  }
+
+
 }
