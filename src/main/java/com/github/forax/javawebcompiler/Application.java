@@ -10,7 +10,7 @@ public final class Application {
   private static final Pattern CLASSNAME_PATTERN = Pattern.compile("class\\s+(\\w+)");
 
   // Dynamic class name extraction
-  private static String classNameExtractor(String code) {
+  public static String classNameExtractor(String code) {
     var m = CLASSNAME_PATTERN.matcher(code);
     return m.find() ? m.group(1) : "Main";
   }
@@ -29,7 +29,7 @@ public final class Application {
         var sourceCode = compileRequest.code();
         var className = classNameExtractor(sourceCode);
         var newLoader = new MemoryClassLoader();
-        var diagnostics = Compiler.compileInMemory(className, sourceCode, newLoader);
+        var diagnostics = Compiler.compileInMemory(className, sourceCode, newLoader, compileRequest.enablePreview());
 
         res.send(objectMapper.writeValueAsString(diagnostics));
       } catch (Exception e) {
@@ -46,7 +46,7 @@ public final class Application {
         var sourceCode = compileRequest.code();
         var className = classNameExtractor(sourceCode);
         var newLoader = new MemoryClassLoader();
-        var diagnostics = Compiler.compileInMemory(className, sourceCode, newLoader);
+        var diagnostics = Compiler.compileInMemory(className, sourceCode, newLoader, compileRequest.enablePreview());
         var runResult = Runner.runFromMemory(className, newLoader, diagnostics);
         var result = objectMapper.writeValueAsString(runResult);
         res.send(result);

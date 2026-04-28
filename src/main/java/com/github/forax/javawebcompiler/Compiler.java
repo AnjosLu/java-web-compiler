@@ -16,19 +16,19 @@ public final class Compiler {
   }
   record Diagnostic(long line, long column, String message, String kind) {}
   private record CompilerResult(boolean success, DiagnosticCollector<Object> diagnostics, MemoryClassLoader loader) {}
-  record CompileRequest(String code){
+  record CompileRequest(String code, boolean enablePreview){
     CompileRequest {
       Objects.requireNonNull(code);
     }
   }
 
   // Package private for testing
-  static List<Diagnostic> compileInMemory(String className, String sourceCode, MemoryClassLoader loader) {
-    var compileResult = compileTask(className, sourceCode, loader);
+  static List<Diagnostic> compileInMemory(String className, String sourceCode, MemoryClassLoader loader, boolean enablePreview) {
+    var compileResult = compileTask(className, sourceCode, loader, enablePreview);
     return compilationResultHandler(compileResult);
   }
 
-  private static CompilerResult compileTask (String className, String sourceCode, MemoryClassLoader loader){
+  private static CompilerResult compileTask (String className, String sourceCode, MemoryClassLoader loader, boolean enablePreview){
     var compiler = ToolProvider.getSystemJavaCompiler();
     if(compiler == null){
       throw new IllegalStateException("Compiler not available");
@@ -44,9 +44,14 @@ public final class Compiler {
             return sourceCode;
         }
     };
-
     var compilationUnits = List.of(file);
-    var task = compiler.getTask(null, fileManager, diagnostics, null, null, compilationUnits);
+    var options = new ArrayList<String>();
+    if (enablePreview) {
+      options.add("--enable-preview");
+      options.add("--release");
+      options.add(String.valueOf(Runtime.version().feature()));
+    }
+    var task = compiler.getTask(null, fileManager, diagnostics, options, null, compilationUnits);
 
     var success = task.call();
     return new CompilerResult(success, diagnostics, loader);

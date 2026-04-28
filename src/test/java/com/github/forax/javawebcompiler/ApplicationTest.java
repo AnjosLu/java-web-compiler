@@ -17,7 +17,7 @@ public final class ApplicationTest {
         }
       }
       """;
-    var result = Compiler.compileInMemory("Main", code, new MemoryClassLoader());
+    var result = Compiler.compileInMemory("Main", code, new MemoryClassLoader(), false);
     assertTrue(result.isEmpty());
   }
 
@@ -30,7 +30,7 @@ public final class ApplicationTest {
         }
       }
     """;
-    var diagnostics = Compiler.compileInMemory("Main", source, new MemoryClassLoader());
+    var diagnostics = Compiler.compileInMemory("Main", source, new MemoryClassLoader(), false);
     assertFalse(diagnostics.isEmpty());
     var first = diagnostics.getFirst();
     assertTrue(first.line() > 0);
@@ -49,7 +49,7 @@ public final class ApplicationTest {
         }
       """;
       var loader = new MemoryClassLoader();
-      var diagnostics = Compiler.compileInMemory("Main", code, loader);
+      var diagnostics = Compiler.compileInMemory("Main", code, loader, false);
       var result = Runner.runFromMemory("Main", loader, diagnostics);
       assertEquals(new Runner.RunResult("Hello" + System.lineSeparator(), List.of()), result);
   }
@@ -71,7 +71,7 @@ public final class ApplicationTest {
         }
       """;
       var loader = new MemoryClassLoader();
-      var diagnostics = Compiler.compileInMemory("Main", code, loader);
+      var diagnostics = Compiler.compileInMemory("Main", code, loader, false);
       var result = Runner.runFromMemory("Main", loader, diagnostics);
       assertEquals(new Runner.RunResult("line1" + System.lineSeparator() + "line2" + System.lineSeparator(), List.of()), result);
     }
@@ -84,7 +84,7 @@ public final class ApplicationTest {
         }
       """;
       var loader = new MemoryClassLoader();
-      var diagnostics = Compiler.compileInMemory("Main", code, loader);
+      var diagnostics = Compiler.compileInMemory("Main", code, loader, false);
       var result = Runner.runFromMemory("Main", loader, diagnostics);
       assertEquals(new Runner.RunResult("", List.of()), result);
     }
@@ -98,7 +98,7 @@ public final class ApplicationTest {
       }
       """;
     var loader = new MemoryClassLoader();
-    var diagnostics = Compiler.compileInMemory("Test", code,loader);
+    var diagnostics = Compiler.compileInMemory("Test", code,loader, false);
 
     assertTrue(diagnostics.isEmpty());
   }
@@ -111,7 +111,7 @@ public final class ApplicationTest {
       """;
 
     var loader = new MemoryClassLoader();
-    var diagnostics = Compiler.compileInMemory("Main", code,loader);
+    var diagnostics = Compiler.compileInMemory("Main", code,loader, false);
 
     assertFalse(diagnostics.isEmpty());
   }
@@ -125,7 +125,7 @@ public final class ApplicationTest {
         """;
 
     var loader = new MemoryClassLoader();
-    var diagnostics = Compiler.compileInMemory("Test", code,loader);
+    var diagnostics = Compiler.compileInMemory("Test", code,loader, false);
 
     assertTrue(diagnostics.isEmpty());
   }
@@ -138,8 +138,21 @@ public final class ApplicationTest {
         }
         """;
     var loader = new MemoryClassLoader();
-    var diagnostics = Compiler.compileInMemory("Main", code,loader);
+    var diagnostics = Compiler.compileInMemory("Main", code,loader, false);
     assertFalse(diagnostics.isEmpty());
     assertEquals(2, diagnostics.size());
   }
+
+  @Test
+  public void compileWithDynamicClassName() {
+    var code = """
+    public class ExamplesClass {
+      public static void main(String[] args) {}
+    }
+    """;
+    var className = Application.classNameExtractor(code);
+    assertEquals("ExamplesClass", className);
+  }
+
+
 }
