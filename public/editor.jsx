@@ -179,6 +179,7 @@ function JavaEditor() {
           {output ?? 'Run your code to see output here...'}
         </pre>
       </div>
+      
     </div>
   );
 }
