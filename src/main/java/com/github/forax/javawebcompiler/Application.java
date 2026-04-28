@@ -15,7 +15,7 @@ public class Application {
   private static final Pattern CLASSNAME_PATTERN = Pattern.compile("class\\s+(\\w+)");
 
   // Dynamic class name extraction
-  private static String classNameExtractor(String code) {
+  public static String classNameExtractor(String code) {
     var m = CLASSNAME_PATTERN.matcher(code);
     return m.find() ? m.group(1) : "Main";
   }

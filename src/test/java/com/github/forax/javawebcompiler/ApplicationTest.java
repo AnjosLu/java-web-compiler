@@ -85,4 +85,18 @@ public final class ApplicationTest {
       var output = Runner.runFromMemory("Main", loader);
       assertEquals("", output);
     }
+
+  @Test
+  public void compileWithDynamicClassName() {
+
+    var code = """
+
+    public class ExamplesClass {
+      public static void main(String[] args) {}
+    }
+    """;
+
+    var className = Application.classNameExtractor(code);
+    assertEquals("ExamplesClass", className);
+  }
 }
