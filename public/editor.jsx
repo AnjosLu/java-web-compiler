@@ -6,6 +6,7 @@ function JavaEditor() {
   const monacoRef = useRef(null);
   const [output, setOutput] = useState(null);
   const [className, setClassName] = useState('Main');
+  const [enablePreview, setEnablePreview] = useState(false);
 
   const defaultCode = 'public class Main {\n  public static void main(String[] args) {\n    System.out.println("Hello World");\n  }\n}';
 
@@ -158,6 +159,14 @@ function JavaEditor() {
         <button onClick={downloadCode} className="btn-download">
           Download
         </button>
+        <label style={{ color: '#ccc', display: 'flex', alignItems: 'center', gap: '6px', marginLeft: '20px' }}>
+          <input
+           type="checkbox"
+            checked={enablePreview}
+            onChange={(e) => setEnablePreview(e.target.checked)}
+          />
+          Preview
+        </label>
       </div>
       {/* The div where Monaco will inject itself */}
       <div ref={editorDivRef} className="editor-container" />
