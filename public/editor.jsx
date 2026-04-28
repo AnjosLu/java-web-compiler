@@ -96,17 +96,35 @@ function JavaEditor() {
     }
   }
 
+  function downloadCode() {
+    if (!editorInstanceRef.current){ return; } 
+    const code = editorInstanceRef.current.getValue();
+    const blob = new Blob([code], { type: 'text/x-java-source' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Main.java';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-      <div style={{ padding: '10px', backgroundColor: '#202124', borderBottom: '1px solid #333' }}>
+      <div style={{ padding: '10px', backgroundColor: '#202124', borderBottom: '1px solid #333', display: 'flex', gap: '10px' }}>
         <button
           onClick={compileCode}
           style={{ padding: '8px 16px', fontSize: '14px', cursor: 'pointer', backgroundColor: '#4CAF50', color: 'white', border: 'none', borderRadius: '4px' }}>
           Compile Code
         </button>
-        <button onClick={runCode}
-          style={{ padding: '8px 16px', fontSize: '14px', cursor: 'pointer', backgroundColor: '#2196F3', color: 'white', border: 'none', borderRadius: '4px' }}>
+        <button
+          onClick={runCode}
+          style={{ padding: '8px 16px', fontSize: '14px', cursor: 'pointer', backgroundColor: '#FF9800', color: 'white', border: 'none', borderRadius: '4px' }}>
           Run
+        </button>
+        <button
+          onClick={downloadCode}
+          style={{ padding: '8px 16px', fontSize: '14px', cursor: 'pointer', backgroundColor: '#2196F3', color: 'white', border: 'none', borderRadius: '4px' }}>
+          Download
         </button>
       </div>
       {/* The div where Monaco will inject itself */}
